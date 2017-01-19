@@ -49,6 +49,8 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     setBackground(SystemColor.window)
   }
 
+  var editTarget: Option[Editable] = None
+
   editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
   addButton.setToolTipText(I18N.gui.get("tabs.run.addButton.tooltip"))
   deleteButton.setToolTipText(I18N.gui.get("tabs.run.deleteButton.tooltip"))
@@ -84,10 +86,16 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     if (! noneButton.isSelected) {
       noneButton.setSelected(true)
       widgetMenu.getSelectedWidget match {
-        case c: org.nlogo.window.ControlWidget => //...special case
+        case c: org.nlogo.window.ControlWidget =>
           val setupButton = org.nlogo.core.Button(Some("setup"), 0, 0, 0, 0)
-          val widget = widgetPanel.makeWidget(setupButton)
-          WidgetActions.addWidget(widgetPanel, widget, x, y)
+          val setupWidget = widgetPanel.makeWidget(setupButton)
+          val goOnceButton = org.nlogo.core.Button(Some("go"), 0, 0, 0, 0)
+          val goOnceWidget = widgetPanel.makeWidget(goOnceButton)
+          val foreverButton = org.nlogo.core.Button(Some("go"), 0, 0, 0, 0, forever = true)
+          val foreverWidget = widgetPanel.makeWidget(foreverButton)
+          WidgetActions.addWidget(widgetPanel, setupWidget, x, y)
+          WidgetActions.addWidget(widgetPanel, goOnceWidget, x + 76, y)
+          WidgetActions.addWidget(widgetPanel, foreverWidget, x + 36, y + 43)
           widgetPanel.revalidate()
         case _ =>
           val widget = widgetPanel.makeWidget(widgetMenu.getSelectedWidget)
@@ -96,8 +104,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       }
     }
   }
-
-  var editTarget: Option[Editable] = None
 
   def handle(e: WindowEvents.EditWidgetEvent) {
     // this is to support the "Edit..." button in the view control strip - ST 7/18/03
