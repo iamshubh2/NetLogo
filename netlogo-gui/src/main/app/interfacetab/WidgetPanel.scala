@@ -271,11 +271,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
         startDragPoint = e.getPoint
 
         if (widgetCreator != null) {
-          val widget = widgetCreator.getWidget
-          if (widget != null) {
-            WidgetActions.addWidget(this, widget, e.getX, e.getY)
-            revalidate()
-          }
+          widgetCreator.createWidgets(this, e.getX, e.getY)
         }
       }
     }

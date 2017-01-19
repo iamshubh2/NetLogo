@@ -157,6 +157,7 @@ tabs.run.speedslider.slower      = slower
 tabs.run.speedslider.tooltip     = Adjust speed of model
 
 tabs.run.widgets.button = Button
+tabs.run.widgets.control = Model Control
 tabs.run.widgets.slider = Slider
 tabs.run.widgets.switch = Switch
 tabs.run.widgets.chooser = Chooser

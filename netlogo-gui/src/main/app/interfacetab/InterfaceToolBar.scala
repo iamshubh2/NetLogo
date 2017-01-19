@@ -19,7 +19,7 @@ import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents,
 
 class InterfaceToolBar(wPanel: WidgetPanel,
                        workspace: GUIWorkspace,
-                       WidgetInfos: List[WidgetInfo],
+                       widgetInfos: List[WidgetInfo],
                        frame: Frame,
                        dialogFactory: EditDialogFactoryInterface) extends ToolBar
   with WidgetCreator
@@ -66,12 +66,36 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     def actionPerformed(e: ActionEvent) { }
   }
 
-  def getWidget =
-    if(noneButton.isSelected) null
-    else {
+  // -------[WidgetPanel]------------[ToolBar]
+  //  |-<mouse>--->|
+  //               |
+  //               |----<createWidgets>->|
+  //                                     |
+  //               |<---<makeWidget>-----|
+  //               |-------------------->|
+  //                                     |
+  //               |<---<revalidate>-----|
+  //               |-------------------->|
+  //                                     |
+  //               |<--------------------|
+  //               |
+  // |<------------|
+  def createWidgets(widgetPanel: WidgetPanel, x: Int, y: Int): Unit = {
+    if (! noneButton.isSelected) {
       noneButton.setSelected(true)
-      wPanel.makeWidget(widgetMenu.getSelectedWidget)
+      widgetMenu.getSelectedWidget match {
+        case c: org.nlogo.window.ControlWidget => //...special case
+          val setupButton = org.nlogo.core.Button(Some("setup"), 0, 0, 0, 0)
+          val widget = widgetPanel.makeWidget(setupButton)
+          WidgetActions.addWidget(widgetPanel, widget, x, y)
+          widgetPanel.revalidate()
+        case _ =>
+          val widget = widgetPanel.makeWidget(widgetMenu.getSelectedWidget)
+          WidgetActions.addWidget(widgetPanel, widget, x, y)
+          widgetPanel.revalidate()
+      }
     }
+  }
 
   var editTarget: Option[Editable] = None
 
@@ -173,10 +197,11 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
   def actionPerformed(e: ActionEvent) { addButton.setSelected(true) }
 
-  def getItems: Array[JMenuItem] = WidgetInfos.map(spec => new JMenuItem(spec.displayName, spec.icon)).toArray
+  def getItems: Array[JMenuItem] = widgetInfos.map(spec => new JMenuItem(spec.displayName, spec.icon)).toArray
+
   class WidgetMenu extends org.nlogo.swing.ToolBarComboBox(getItems) {
     def getSelectedWidget =
-      WidgetInfos.find(_.displayName == getSelectedItem.getText).get.coreWidget
+      widgetInfos.find(_.displayName == getSelectedItem.getText).get.coreWidget
     override def populate(menu: JPopupMenu) {
       super.populate(menu)
       for(i <- items) {

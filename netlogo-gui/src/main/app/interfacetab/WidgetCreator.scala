@@ -10,5 +10,5 @@ package org.nlogo.app.interfacetab
 import org.nlogo.window.Widget
 
 trait WidgetCreator {
-  def getWidget: Widget
+  def createWidgets(widgetPanel: WidgetPanel, x: Int, y: Int)
 }

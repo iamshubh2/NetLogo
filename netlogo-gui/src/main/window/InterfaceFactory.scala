@@ -16,6 +16,8 @@ object WidgetInfo {
   }
 
   val button  = WidgetInfo("button", "button.gif", () => CoreButton(None, 0, 0, 0, 0))
+  // TODO: Add image for control widget
+  val control = WidgetInfo("control", "button.gif", () => ControlWidget("control", 0, 0, 0, 0))
   val slider  = WidgetInfo("slider", "slider.gif", () => CoreSlider(None))
   val switch  = WidgetInfo("switch", "switch.gif", () => CoreSwitch(None))
   val chooser = WidgetInfo("chooser", "chooser.gif", () => CoreChooser(None))
@@ -25,11 +27,15 @@ object WidgetInfo {
   val output  = WidgetInfo("output", "output.gif", () => CoreOutput(0, 0, 0, 0, 13))
   val note    = WidgetInfo("note", "note.gif", () => CoreTextBox(None, fontSize = 11, color = 0))
   val view    = WidgetInfo("view", "view.gif", () => CoreView())
+
 }
 
 case class WidgetInfo(displayName: String, widgetThunk: () => CoreWidget, imageName: String) {
   def icon = new ImageIcon(classOf[WidgetInfo].getResource("/images/" + imageName))
   def coreWidget = widgetThunk()
+}
+
+case class ControlWidget(name: String, bottom: Int, left: Int, right: Int, top: Int) extends CoreWidget {
 }
 
 trait InterfaceFactory {
