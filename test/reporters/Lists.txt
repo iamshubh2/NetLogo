@@ -76,6 +76,9 @@ ListInsert4
 ListInsert5
   insert-item 2 [8 9] "h" => [8 9 "h"]
 
+ListInsert6
+  insert-item 1 [2 3] [9 5] => [2 [9 5] 3]
+
 ListFirst1
   first [] => ERROR List is empty.
 
