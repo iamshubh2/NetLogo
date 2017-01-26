@@ -76,6 +76,9 @@ StrInsert5
 StrInsert6
   insert-item 1 "bit" "l" => "blit"
 
+StrInsert7
+  insert-item 1 "bit" "abb" => "babbit"
+
 StrRemove1
   remove "r" "string" => "sting"
 
